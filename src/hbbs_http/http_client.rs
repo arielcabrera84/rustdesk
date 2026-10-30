@@ -98,8 +98,23 @@ macro_rules! configure_http_client {
     }};
 }
 
+// NodosOnlineDesk: the API server's certificate is issued by our own device CA, which is
+// name-constrained to the server's IPs, so it is trusted in addition to the system roots.
+fn nodos_ca() -> Option<reqwest::Certificate> {
+    static CA: std::sync::OnceLock<Option<reqwest::Certificate>> = std::sync::OnceLock::new();
+    CA.get_or_init(|| {
+        reqwest::Certificate::from_pem(include_bytes!("../../res/nodos-ca-equipos.pem"))
+            .map_err(|e| log::error!("Invalid NodosOnlineDesk device CA: {}", e))
+            .ok()
+    })
+    .clone()
+}
+
 pub fn create_http_client(tls_type: TlsType, danger_accept_invalid_cert: bool) -> SyncClient {
-    let builder = SyncClient::builder();
+    let mut builder = SyncClient::builder();
+    if let Some(ca) = nodos_ca() {
+        builder = builder.add_root_certificate(ca);
+    }
     configure_http_client!(builder, tls_type, danger_accept_invalid_cert, SyncClient)
 }
 
@@ -107,7 +122,10 @@ pub fn create_http_client_async(
     tls_type: TlsType,
     danger_accept_invalid_cert: bool,
 ) -> AsyncClient {
-    let builder = AsyncClient::builder();
+    let mut builder = AsyncClient::builder();
+    if let Some(ca) = nodos_ca() {
+        builder = builder.add_root_certificate(ca);
+    }
     configure_http_client!(builder, tls_type, danger_accept_invalid_cert, AsyncClient)
 }
 

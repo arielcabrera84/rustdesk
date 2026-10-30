@@ -2538,6 +2538,10 @@ fn apply_nodonlinedesk_brand() {
         (keys::OPTION_ALLOW_AUTO_DISCONNECT, "Y"),
         (keys::OPTION_AUTO_DISCONNECT_TIMEOUT, "10"),
         (keys::OPTION_ALLOW_AUTO_UPDATE, "N"),
+        // Equipment inventory: heartbeat/sysinfo/--assign go to our own API over TLS
+        // (device CA embedded in hbbs_http::http_client), never with an unverified certificate.
+        (keys::OPTION_API_SERVER, "https://190.123.85.185:21114"),
+        (keys::OPTION_ALLOW_INSECURE_TLS_FALLBACK, "N"),
     ] {
         settings.insert(k.to_owned(), v.to_owned());
     }
@@ -2553,10 +2557,17 @@ fn apply_nodonlinedesk_brand() {
         (keys::OPTION_DISABLE_CHANGE_ID, "Y"),
         (keys::OPTION_ALLOW_DEEP_LINK_PASSWORD, "N"),
         (keys::OPTION_ALLOW_DEEP_LINK_SERVER_SETTINGS, "N"),
+        // Keep the explicit :21114 port on the https API URL.
+        (keys::OPTION_ALLOW_HTTPS_21114, "Y"),
     ] {
         builtin.insert(k.to_owned(), v.to_owned());
     }
     drop(builtin);
+    // Our server has no RustDesk Pro accounts or address books: hide them.
+    let mut hard = config::HARD_SETTINGS.write().unwrap();
+    hard.insert("disable-account".to_owned(), "Y".to_owned());
+    hard.insert("disable-ab".to_owned(), "Y".to_owned());
+    drop(hard);
     // Upstream update checks would offer the stock RustDesk build.
     config::OVERWRITE_LOCAL_SETTINGS
         .write()
