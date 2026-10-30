@@ -1,7 +1,7 @@
-# Builds only the branded nodonlinedesk Windows x64 installer.
+# Builds only the branded NodosOnlineDesk Windows x64 installer.
 # Steps mirror build-for-windows-flutter (x86_64) in flutter-build.yml, without signing,
 # arm64 or the MSI; keep them in sync when merging upstream.
-name: nodonlinedesk Windows
+name: NodosOnlineDesk Windows
 
 on:
   workflow_dispatch:
@@ -114,7 +114,7 @@ jobs:
             exit 1
           fi
 
-      - name: Build nodonlinedesk
+      - name: Build NodosOnlineDesk
         run: |
           python3 .\build.py --portable --flutter --skip-portable-pack --hwcodec --vram
           mv ./flutter/build/windows/x64/runner/Release ./rustdesk
@@ -168,13 +168,13 @@ jobs:
           python3 ./generate.py -f ../../rustdesk/ -o . -e ../../rustdesk/rustdesk.exe
           popd
           mkdir -p ./SignOutput
-          mv ./target/release/rustdesk-portable-packer.exe ./SignOutput/nodonlinedesk-${{ env.VERSION }}-x86_64.exe
+          mv ./target/release/rustdesk-portable-packer.exe ./SignOutput/NodosOnlineDesk-${{ env.VERSION }}-x86_64.exe
 
       - name: Upload installer
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: nodonlinedesk-windows-x86_64
-          path: ./SignOutput/nodonlinedesk-*.exe
+          name: NodosOnlineDesk-windows-x86_64
+          path: ./SignOutput/NodosOnlineDesk-*.exe
 
       - name: Publish Release
         if: ${{ inputs.publish }}
@@ -182,5 +182,5 @@ jobs:
         with:
           prerelease: false
           tag_name: ${{ env.RELEASE_TAG }}
-          name: nodonlinedesk ${{ env.VERSION }}
-          files: ./SignOutput/nodonlinedesk-*.exe
+          name: NodosOnlineDesk ${{ env.VERSION }}
+          files: ./SignOutput/NodosOnlineDesk-*.exe

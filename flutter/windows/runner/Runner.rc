@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "nodonlinedesk" "\0"
-            VALUE "FileDescription", "nodonlinedesk Remote Desktop" "\0"
+            VALUE "CompanyName", "NodosOnlineDesk" "\0"
+            VALUE "FileDescription", "NodosOnlineDesk Remote Desktop" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "nodonlinedesk" "\0"
+            VALUE "InternalName", "NodosOnlineDesk" "\0"
             VALUE "LegalCopyright", "Based on RustDesk (AGPL-3.0), Copyright © 2026 Purslane Tech Pte. Ltd." "\0"
             VALUE "OriginalFilename", "rustdesk.exe" "\0"
-            VALUE "ProductName", "nodonlinedesk" "\0"
+            VALUE "ProductName", "NodosOnlineDesk" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -2515,11 +2515,11 @@ pub fn load_custom_client() {
     }
 }
 
-// Built-in branding for nodonlinedesk: the signed custom.txt route needs a RustDesk Pro key.
+// Built-in branding for NodosOnlineDesk: the signed custom.txt route needs a RustDesk Pro key.
 fn apply_nodonlinedesk_brand() {
     const SERVER: &str = "190.123.85.185";
     const KEY: &str = "O3FCgN3Wi1zyxUP10hAX0IA+db4j940WbMYa6Rwk79I=";
-    *config::APP_NAME.write().unwrap() = "nodonlinedesk".to_owned();
+    *config::APP_NAME.write().unwrap() = "NodosOnlineDesk".to_owned();
     let mut settings = config::OVERWRITE_SETTINGS.write().unwrap();
     settings.insert("custom-rendezvous-server".to_owned(), SERVER.to_owned());
     settings.insert("relay-server".to_owned(), SERVER.to_owned());
