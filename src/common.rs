@@ -2493,6 +2493,7 @@ pub fn rustdesk_interval(i: Interval) -> ThrottledInterval {
 }
 
 pub fn load_custom_client() {
+    apply_nodonlinedesk_brand();
     #[cfg(debug_assertions)]
     if let Ok(data) = std::fs::read_to_string("./custom.txt") {
         read_custom_client(data.trim());
@@ -2512,6 +2513,22 @@ pub fn load_custom_client() {
         };
         read_custom_client(&data.trim());
     }
+}
+
+// Built-in branding for nodonlinedesk: the signed custom.txt route needs a RustDesk Pro key.
+fn apply_nodonlinedesk_brand() {
+    const SERVER: &str = "190.123.85.185";
+    const KEY: &str = "O3FCgN3Wi1zyxUP10hAX0IA+db4j940WbMYa6Rwk79I=";
+    *config::APP_NAME.write().unwrap() = "nodonlinedesk".to_owned();
+    let mut settings = config::OVERWRITE_SETTINGS.write().unwrap();
+    settings.insert("custom-rendezvous-server".to_owned(), SERVER.to_owned());
+    settings.insert("relay-server".to_owned(), SERVER.to_owned());
+    settings.insert("key".to_owned(), KEY.to_owned());
+    // Upstream update checks would offer the stock RustDesk build.
+    config::OVERWRITE_LOCAL_SETTINGS
+        .write()
+        .unwrap()
+        .insert(keys::OPTION_ENABLE_CHECK_UPDATE.to_owned(), "N".to_owned());
 }
 
 fn read_custom_client_advanced_settings(
