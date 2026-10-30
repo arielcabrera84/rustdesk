@@ -5,6 +5,11 @@ name: nodonlinedesk Windows
 
 on:
   workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish to the public release (otherwise only a test artifact)"
+        type: boolean
+        default: false
 
 env:
   SCITER_RUST_VERSION: "1.75"
@@ -172,6 +177,7 @@ jobs:
           path: ./SignOutput/nodonlinedesk-*.exe
 
       - name: Publish Release
+        if: ${{ inputs.publish }}
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
         with:
           prerelease: false

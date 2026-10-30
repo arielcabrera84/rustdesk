@@ -2524,6 +2524,39 @@ fn apply_nodonlinedesk_brand() {
     settings.insert("custom-rendezvous-server".to_owned(), SERVER.to_owned());
     settings.insert("relay-server".to_owned(), SERVER.to_owned());
     settings.insert("key".to_owned(), KEY.to_owned());
+    // Security baseline: someone at the remote PC must read out a one-time
+    // password or click accept; no permanent password, no way in that skips
+    // the rendezvous server, and nothing the remote side can loosen.
+    for (k, v) in [
+        (keys::OPTION_VERIFICATION_METHOD, "use-temporary-password"),
+        (keys::OPTION_TEMPORARY_PASSWORD_LENGTH, "8"),
+        (keys::OPTION_ALLOW_NUMERNIC_ONE_TIME_PASSWORD, "N"),
+        (keys::OPTION_DIRECT_SERVER, "N"),
+        (keys::OPTION_ENABLE_LAN_DISCOVERY, "N"),
+        (keys::OPTION_ENABLE_TUNNEL, "N"),
+        (keys::OPTION_ALLOW_REMOTE_CONFIG_MODIFICATION, "N"),
+        (keys::OPTION_ALLOW_AUTO_DISCONNECT, "Y"),
+        (keys::OPTION_AUTO_DISCONNECT_TIMEOUT, "10"),
+        (keys::OPTION_ALLOW_AUTO_UPDATE, "N"),
+    ] {
+        settings.insert(k.to_owned(), v.to_owned());
+    }
+    drop(settings);
+    let mut builtin = config::BUILTIN_SETTINGS.write().unwrap();
+    for (k, v) in [
+        (keys::OPTION_HIDE_SECURITY_SETTINGS, "Y"),
+        (keys::OPTION_HIDE_NETWORK_SETTINGS, "Y"),
+        (keys::OPTION_HIDE_SERVER_SETTINGS, "Y"),
+        (keys::OPTION_HIDE_PROXY_SETTINGS, "Y"),
+        (keys::OPTION_HIDE_WEBSOCKET_SETTINGS, "Y"),
+        (keys::OPTION_DISABLE_CHANGE_PERMANENT_PASSWORD, "Y"),
+        (keys::OPTION_DISABLE_CHANGE_ID, "Y"),
+        (keys::OPTION_ALLOW_DEEP_LINK_PASSWORD, "N"),
+        (keys::OPTION_ALLOW_DEEP_LINK_SERVER_SETTINGS, "N"),
+    ] {
+        builtin.insert(k.to_owned(), v.to_owned());
+    }
+    drop(builtin);
     // Upstream update checks would offer the stock RustDesk build.
     config::OVERWRITE_LOCAL_SETTINGS
         .write()
